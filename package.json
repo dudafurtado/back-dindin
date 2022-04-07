@@ -1,0 +1,29 @@
+{
+  "name": "back-dindin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dudafurtado/back-dindin.git"
+  },
+  "keywords": [],
+  "author": "Maria Eduarda Furtado e Danilo Cassiano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dudafurtado/back-dindin/issues"
+  },
+  "homepage": "https://github.com/dudafurtado/back-dindin#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.7.3",
+    "secure-password": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
