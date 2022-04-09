@@ -1,6 +1,6 @@
 create database dindin;
 
-create table ususarios (
+create table usuarios (
     id serial primary key,
     nome text not null,
     email varchar(50) not null unique,

@@ -6,7 +6,7 @@ const transactions = require('../controllers/transactions')
 const rotas = express()
 
 // controllers users
-rotas.post('/usuario', users.userFirstAccess);
+rotas.post('/cadastrar', users.userFirstAccess);
 rotas.post('/login', users.userLogIn);
 // needs a token to getting in
 rotas.get('/usuario', users.informationToTheUserHimself);
