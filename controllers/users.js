@@ -1,5 +1,3 @@
-const { request } = require('express');
-const { Pool } = require('pg');
 const conexao = require('../database/conexao');
 const securePassword = require('secure-password');
 const jwt = require('jsonwebtoken');
@@ -11,39 +9,46 @@ const userFirstAccess = async (req, res) => {
     const { nome, email, senha } = req.body;
 
     if (!nome) {
-        return res.status(400).json("O Campo nome é Obrigatorio.");
+        return res.status(400).json("O Campo nome é obrigatorio.");
     }
 
     if (!email) {
-        return res.status(400).json("O Campo email é Obrigatorio.");
+        return res.status(400).json("O Campo email é obrigatorio.");
     }
 
     if (!senha) {
-        return res.status(400).json("O Campo senha é Obrigatorio.");
+        return res.status(400).json("O Campo senha é obrigatorio.");
     }
 
     try {
-        const query = 'select * from usuarios whare email = $1';
-        const usuario = await conexao.query(query, [email]);
+        const query = 'select * from usuarios where email = $1';
+        const userByEmail = await conexao.query(query, [email]);
 
-        if (usuario.rowCount > 0) {
-            return res.status(400).json("Já existe usuário cadastrado com o e-mail informado.");
+        if (userByEmail.rowCount > 0) {
+            return res.status(400).json("Já existe um usuário cadastrado com o e-mail informado.");
         }
+
     } catch (error) {
-        res.status(400).json(error.message);
+        return res.status(400).json(error.message);
     }
 
     try {
         const hash = (await pwd.hash(Buffer.from(senha))).toString("hex");
-        const query = 'insert into usuarios(nome, email, senha) value ($1, $2, $3)';
-        const usuario = await conexao.query(query, [nome, email, hash]);
 
-        if (usuario.rowCount === 0) {
+        const queryOne = 'insert into usuarios (nome, email, senha) values ($1, $2, $3)';
+        const userRegistered = await conexao.query(queryOne, [nome, email, hash]);
+
+        if (userRegistered.rowCount === 0) {
             return res.status(400).json('Não foi possivel cadastrar o usuário.');
         }
-        return res.status(200).json('Usuário cadastrado com sucesso.')
+
+        const queryTwo = 'select * from usuarios where email = $1';
+        const userByEmail2 = await conexao.query(queryTwo, [email]);
+        const {id: idSignIn, nome: nomeSignIn, email: emailSignIn } = userByEmail2.rows[0]
+
+        return res.status(200).json({ id: idSignIn, nome: nomeSignIn, email: emailSignIn })
     } catch (error) {
-        res.status(400).json(error.message);
+        return res.status(400).json(error.message);
     }
 };
 
@@ -52,24 +57,24 @@ const userLogIn = async (req, res) => {
     const { email, senha } = req.body;
 
     if (!email) {
-        return res.status(400).json("O Campo email é Obrigatorio.");
+        return res.status(400).json("O campo email é obrigatorio.");
     }
 
     if (!senha) {
-        return res.status(400).json("O Campo senha é Obrigatorio.");
+        return res.status(400).json("O campo senha é obrigatorio.");
     }
 
     try {
-        const query = 'select * from usuarios whare email = $1';
-        const usuarios = await conexao.query(query, [email]);
+        const query = 'select * from usuarios where email = $1';
+        const userByEmail = await conexao.query(query, [email]);
 
-        if (usuarios.rowCount == 0) {
+        if (userByEmail.rowCount === 0) {
             return res.status(400).json("Email ou senha incorretos.");
         }
 
-        const usuario = usuarios.rows[0];
+        const user = userByEmail.rows[0];
 
-        const result = await pwd.verify(Buffer.from(senha), Buffer.from(usuario.senha, "hex"));
+        const result = await pwd.verify(Buffer.from(senha), Buffer.from(user.senha, "hex"));
 
         switch (result) {
             case securePassword.INVALID_UNRECOGNIZED_HASH:
@@ -82,20 +87,22 @@ const userLogIn = async (req, res) => {
                     const hash = (await pwd.hash(Buffer.from(senha))).toString("hex");
                     const query = 'update usuarios set senha = $1 where email = $2';
                     await conexao.query(query, [hash, email]);
-                } catch (err) {
+                } catch (error) {
                 }
                 break;
         }
 
         const token = jwt.sign({
-            id: usuario.id,
-            nome: usuario.nome,
-            email: usuario.email
-        }, jwtSecret);
+            id: user.id,
+            nome: user.nome,
+            email: user.email
+        }, jwtSecret, {
+            expiresIn: "730h"
+        });
 
         return res.send(token);
     } catch (error) {
-        res.status(400).json(error.message);
+        return res.status(400).json(error.message);
     };
 };
 
@@ -103,7 +110,7 @@ const informationToTheUserHimself = async (req, res) => {
     try {
 
     } catch (error) {
-        res.status(400).json(error.message);
+        return res.status(400).json(error.message);
     }
 };
 
