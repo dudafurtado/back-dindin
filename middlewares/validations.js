@@ -1,6 +1,6 @@
-const jsonwebtoken = require('jsonwebtoken')
-const jwtSecret = require('../jwt_secret')
-const securePassword = require('secure-password')
+const jsonwebtoken = require('jsonwebtoken');
+const jwtSecret = require('../jwt_secret');
+const securePassword = require('secure-password');
 
 const password = securePassword()
 
@@ -43,10 +43,45 @@ const creatingToken = (req, res, next) => {
         id: user.id,
         nome: user.nome,
         email: user.email
-    }, jwtSecret)
-    // colocar pra expirar em 2 meses ?
+    }, jwtSecret, {
+        expiresIn:'730h'
+    });
     
     next();
+}
+
+const authorizationToken = (req, res, next) => {
+    const { Authorization } = req.headers;
+
+    const token = Authorization.replace('Bearer', "").trim();
+
+    const { id: jwtID } = jsonwebtoken.verify(token, jwtSecret);
+}
+
+const requiredFields = (req, res, next) => {
+    const { descricao, valor, data, categoria_id, tipo } = req.body;
+    
+    if (!descricao) {
+        return res.status(400).json("É necessário descrever a transação.");
+    }
+
+    if (!valor) {
+        return res.status(400).json("É necessário definir o valor da transação.");
+    }
+
+    if (!data) {
+        return res.status(400).json("É necessário indicar a data transação.");
+    }
+
+    if (!categoria_id) {
+        return res.status(400).json("É necessário indicar em qual categoria se encaixa a transação.");
+    }
+
+    if (!tipo) {
+        return res.status(400).json("É necessário informar qual o tipo da transação.");
+    }
+
+    next()
 }
 
 // import verifyPassword from '../validation/login';
@@ -54,3 +89,11 @@ const creatingToken = (req, res, next) => {
 //    const { password } = req.body;
 //    verifyPassword(password);
 // }
+
+module.exports = {
+    passwordCrypted,
+    validatingPassword,
+    creatingToken,
+    authorizationToken,
+    requiredFields
+}

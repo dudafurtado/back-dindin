@@ -16,11 +16,11 @@ routes.put('/usuario', users.userToChangeHimself);
 routes.get('categoria', category.listingAllTheCategories);
 
 // controllers transactions
+routes.get('/transacao/extrato', transactions.bankStatement);
 routes.get('/transacao', transactions.listingTransactions); //parametro tipo query filtro
 routes.get('/transacao/:id', transactions.getTransactionById);
 routes.post('/transacao', transactions.addNewTransaction);
 routes.put('/transacao/:id', transactions.updateTransaction);
 routes.delete('/transacao/:id', transactions.deleteTransaction);
-routes.get('/transacao/extrato', transactions.bankStatement);
 
 module.exports = routes;
