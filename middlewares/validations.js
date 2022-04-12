@@ -1,6 +1,7 @@
 const jsonwebtoken = require('jsonwebtoken')
 const jwtSecret = require('../jwt_secret')
 const securePassword = require('secure-password')
+const { rows } = require('pg/lib/defaults')
 
 const password = securePassword()
 
@@ -39,13 +40,17 @@ const validatingPassword = async (req, res, next) => {
 const creatingToken = (req, res, next) => {
     const { id, nome, email } = req.body;
 
-    const token = jsonwebtoken.sign({
+    const token = await jwt.sign({
         id: user.id,
         nome: user.nome,
         email: user.email
     }, jwtSecret)
     // colocar pra expirar em 2 meses ?
-    
+
+
+    const usuarios = rows[0];
+
+    req.usuarios = usuarios;
     next();
 }
 
