@@ -1,13 +1,19 @@
 const express = require('express');
-const users = require('../controllers/users');
-const category = require('../controllers/category')
-const transactions = require('../controllers/transactions')
+
+const { authorizationToken } =  require('../src/middlewares/tokenNeeded')
+
+const users = require('../src/controllers/users');
+const category = require('../src/controllers/category')
+const transactions = require('../src/controllers/transactions')
 
 const routes = express()
 
 // controllers users
 routes.post('/cadastrar', users.userFirstAccess);
 routes.post('/login', users.userLogIn);
+
+app.use(authorizationToken)
+
 // needs a token to getting in
 routes.get('/usuario', users.informationToTheUserHimself);
 routes.put('/usuario', users.userToChangeHimself);
