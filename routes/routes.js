@@ -8,20 +8,16 @@ const transactions = require('../src/controllers/transactions')
 
 const routes = express()
 
-// controllers users
 routes.post('/cadastrar', users.userFirstAccess);
 routes.post('/login', users.userLogIn);
 
-app.use(authorizationToken)
+routes.use(authorizationToken)
 
-// needs a token to getting in
 routes.get('/usuario', users.informationToTheUserHimself);
 routes.put('/usuario', users.userToChangeHimself);
 
-// controllers category
 routes.get('categoria', category.listingAllTheCategories);
 
-// controllers transactions
 routes.get('/transacao/extrato', transactions.bankStatement);
 routes.get('/transacao', transactions.listingTransactions); //parametro tipo query filtro
 routes.get('/transacao/:id', transactions.getTransactionById);
