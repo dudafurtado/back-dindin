@@ -16,7 +16,7 @@ routes.use(authorizationToken)
 routes.get('/usuario', users.informationToTheUserHimself);
 routes.put('/usuario', users.userToChangeHimself);
 
-routes.get('categoria', category.listingAllTheCategories);
+routes.get('/categoria', category.listingAllTheCategories);
 
 routes.get('/transacao/extrato', transactions.bankStatement);
 routes.get('/transacao', transactions.listingTransactions); //parametro tipo query filtro
