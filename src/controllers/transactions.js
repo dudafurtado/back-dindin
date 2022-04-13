@@ -45,9 +45,16 @@ const addNewTransaction = async (req, res) => {
     const jwtID = validateToken({ req });
 
     const { descricao, valor, data, categoria_id, tipo } = req.body;
-    requiredFields({ descricao, valor, data, categoria_id, tipo, res });
+    console.log(req.body)
+
+    const validations = requiredFields({ descricao, valor, data, categoria_id, tipo});
+    if (!validations.ok) {
+        return res.status(400).json(validations.message)
+    }
+    console.log(categoria_id)
     try {
         const categoryExists = await conexao.query('select * from categorias where id = $1', [categoria_id]);
+        console.log(categoryExists)
         if (categoryExists.rowCount === 0) {
             return res.status(400).json(errors.catNonexistent);
         }
@@ -60,7 +67,7 @@ const addNewTransaction = async (req, res) => {
 
         return res.status(200).json(addTransaction.rows[0]);
     } catch(error) {
-        return res.status(400).json(error.message);
+        return res.status(400).json(error);
     }
 };
 
@@ -72,7 +79,7 @@ const updateTransaction = async (req, res) => {
 
     const { id: paramsID } = req.params;
     try {
-        const transactionById = await conexao.query('select * from transacoes where id = $1, usuario_id = $2', [paramsID, jwtID]);
+        const transactionById = await conexao.query('select * from transacoes where id = $1 and usuario_id = $2', [paramsID, jwtID]);
         if(transactionById.rowCount === 0) {
             return res.status(400).json(errors.transNonexistent);
         }
@@ -82,8 +89,8 @@ const updateTransaction = async (req, res) => {
             return res.status(400).json(errors.catNonexistent);
         }
 
-        const query = 'update transacoes set descricao = $1, valor = $2, data = $3, categoria_id = $4, usuario_id = $5, tipo = $6'
-        const addTransaction = await conexao.query(query, [descricao, valor, data, categoria_id, jwtID, tipo]);
+        const query = 'update transacoes set descricao = $1, valor = $2, data = $3, categoria_id = $4, usuario_id = $5, tipo = $6 where id = $7'
+        const addTransaction = await conexao.query(query, [descricao, valor, data, categoria_id, jwtID, tipo, paramsID]);
         if (addTransaction.rowCount === 0) {
             return res.status(400).json(errors.transNotPossible);
         }
