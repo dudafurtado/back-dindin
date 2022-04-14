@@ -6,6 +6,7 @@ const requiredFields = ({ descricao, valor, data, categoria_id, tipo}) => {
             message: errors.descriptionX,
             ok: false
         }
+        return response;
     }
 
     if (!valor) {
@@ -13,6 +14,7 @@ const requiredFields = ({ descricao, valor, data, categoria_id, tipo}) => {
             message: errors.priceX,
             ok: false
         }
+        return response;
     }
 
     if (!data) {
@@ -20,6 +22,7 @@ const requiredFields = ({ descricao, valor, data, categoria_id, tipo}) => {
             message: errors.dateX,
             ok: false
         }
+        return response;
     }
 
     if (!categoria_id) {
@@ -27,6 +30,7 @@ const requiredFields = ({ descricao, valor, data, categoria_id, tipo}) => {
             message: errors.categoryIDX,
             ok: false
         }
+        return response;
     }
 
     if (!tipo) {
@@ -34,11 +38,13 @@ const requiredFields = ({ descricao, valor, data, categoria_id, tipo}) => {
             message: errors.typeX,
             ok: false
         }
+        return response;
     } else if (tipo !== 'entrada' && tipo !== 'saída') {
         const response = {
             message: errors.wrongType,
             ok: false
         }
+        return response;
     }
 
     return { ok: true }

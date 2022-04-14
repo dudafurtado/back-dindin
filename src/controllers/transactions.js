@@ -46,12 +46,11 @@ const addNewTransaction = async (req, res) => {
 
     const { descricao, valor, data, categoria_id, tipo } = req.body;
     console.log(req.body)
-
     const validations = requiredFields({ descricao, valor, data, categoria_id, tipo});
     if (!validations.ok) {
         return res.status(400).json(validations.message)
     }
-    console.log(categoria_id)
+
     try {
         const categoryExists = await conexao.query('select * from categorias where id = $1', [categoria_id]);
         console.log(categoryExists)
