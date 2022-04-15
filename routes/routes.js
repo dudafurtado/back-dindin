@@ -14,12 +14,12 @@ routes.post('/login', users.userLogIn);
 routes.use(authorizationToken)
 
 routes.get('/usuario', users.informationToTheUserHimself);
-routes.put('/usuario', users.userToChangeHimself);
+routes.put('/usuario', users.userUpdate);
 
 routes.get('/categoria', category.listingAllTheCategories);
 
 routes.get('/transacao/extrato', transactions.bankStatement);
-routes.get('/transacao', transactions.listingTransactions); //parametro tipo query filtro
+routes.get('/transacao', transactions.listingTransactions); 
 routes.get('/transacao/:id', transactions.getTransactionById);
 routes.post('/transacao', transactions.addNewTransaction);
 routes.put('/transacao/:id', transactions.updateTransaction);
