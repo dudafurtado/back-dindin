@@ -1,6 +1,6 @@
 const { errors } = require('../messages/error')
 
-const requiredFields = ({ descricao, valor, data, categoria_id, tipo}) => {
+const fieldsToTransactions = ({ descricao, valor, data, categoria_id, tipo}) => {
     if (!descricao) {
         const response = {
             message: errors.descriptionX,
@@ -50,4 +50,56 @@ const requiredFields = ({ descricao, valor, data, categoria_id, tipo}) => {
     return { ok: true }
 }
 
-module.exports = { requiredFields }
+const fieldsToUser = ({nome , email, senha}) => {
+    if (!nome) {
+        const response = {
+            message: errors.nameX,
+            ok: false
+        }
+        return response;
+    }
+
+    if (!email) {
+        const response = {
+            message: errors.emailX,
+            ok: false
+        }
+        return response;
+    }
+
+    if (!senha) {
+        const response = {
+            message: errors.passwordX,
+            ok: false
+        }
+        return response;
+    }
+
+    return { ok: true }
+}
+
+const fieldsToLogin = ({email, senha}) => {
+    if (!email) {
+        const response = {
+            message: errors.emailX,
+            ok: false
+        }
+        return response;
+    }
+
+    if (!senha) {
+        const response = {
+            message: errors.passwordX,
+            ok: false
+        }
+        return response;
+    }
+
+    return { ok: true }
+}
+
+module.exports = { 
+    fieldsToTransactions,
+    fieldsToUser,
+    fieldsToLogin
+ }

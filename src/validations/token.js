@@ -12,13 +12,20 @@ const creatingToken = ({ id, nome, email }) => {
     return token;
 }
 
-const validateToken = ({ req }) => {
+const tokenToGetID = ({ req }) => {
     const token = req.header('Authorization').replace('Bearer', "").trim();
     const { id: jwtID } = jsonwebtoken.verify(token, jwtSecret);
     return jwtID;
 }
 
+const tokenToGetEmail = ({ req }) => {
+    const token = req.header('Authorization').replace('Bearer', "").trim();
+    const { email: jwtEmail } = jsonwebtoken.verify(token, jwtSecret);
+    return jwtID;
+}
+
 module.exports = {
     creatingToken,
-    validateToken
+    tokenToGetID,
+    tokenToGetEmail
 }
