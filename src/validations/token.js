@@ -1,13 +1,13 @@
 const jsonwebtoken = require('jsonwebtoken');
-const jwtSecret = require('../jwt_secret');
+const jwtSecret = require('../../env/jwt_secret');
 
-const creatingToken = ({ id, nome, email }) => {
+const creatingToken = ({ user }) => {
     const token = jsonwebtoken.sign({
         id: user.id,
         nome: user.nome,
         email: user.email
     }, jwtSecret, {
-        expiresIn:'730h'
+        expiresIn:'12h'
     });
     return token;
 }
@@ -21,7 +21,7 @@ const tokenToGetID = ({ req }) => {
 const tokenToGetEmail = ({ req }) => {
     const token = req.header('Authorization').replace('Bearer', "").trim();
     const { email: jwtEmail } = jsonwebtoken.verify(token, jwtSecret);
-    return jwtID;
+    return jwtEmail;
 }
 
 module.exports = {

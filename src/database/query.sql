@@ -1,24 +1,24 @@
 create database dindin;
 
 create table usuarios (
-    id serial primary key,
+    id serial primary key not null,
     nome text not null,
     email varchar(50) not null unique,
     senha text not null
 );
 
 create table categorias (
-    id serial primary key,
-    descricao text
+    id serial primary key not null,
+    descricao text not null
 );
 
 create table transacoes (
-    id serial primary key,
+    id serial primary key not null,
     descricao text,
-    valor integer,
-    data date,
-    categoria_id integer references categorias(id),
-    usuario_id integer references usuarios(id),
+    valor integer not null,
+    data date not null,
+    categoria_id integer references categorias(id) not null,
+    usuario_id integer references usuarios(id) not null,
     tipo text
 );
 

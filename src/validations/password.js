@@ -1,38 +1,35 @@
-const jwtSecret = require('../jwt_secret');
 const securePassword = require('secure-password');
+const password = securePassword();
 
-const password = securePassword()
+const { errors } = require('../messages/error');
+const { userPasswordUpdated } = require('../models/usersModel');
 
-const passwordCrypted = async (req, res, next) => {
-    const { senha } = req.body;
-
+const passwordCrypted = async ({ senha }) => {
     const hash = (await password.hash(Buffer.from(senha))).toString("hex");
-
-    next();
+    return hash;
 }
 
-const validatingPassword = async (req, res, next) => {
-    const { senha } = req.body;
-
-    const result = await password.verify(Buffer.from(senha), Buffer.from(usuario.senha, "hex"));
+const validatingPassword = async ({ passwordReq, userPasswordDB, email }) => {
+    const result = await password.verify(Buffer.from(passwordReq), Buffer.from(userPasswordDB, "hex"));
 
     switch (result) {
         case securePassword.INVALID_UNRECOGNIZED_HASH:
         case securePassword.INVALID:
-            return res.status(400).json("Email ou senha incorretos.");
+            const response = {
+                message: errors.loginIncorrect,
+                ok: false
+            }
+            return response;
         case securePassword.VALID:
             break;
         case securePassword.VALID_NEEDS_REHASH:
             try {
-                const hash = (await password.hash(Buffer.from(senha))).toString("hex");
-                const query = 'update usuarios set senha = $1 where email = $2';
-                await conexao.query(query, [hash, email]);
+                const hash = (await password.hash(Buffer.from(passwordReq))).toString("hex");
+                await userPasswordUpdated({ hash, email });
             } catch {
             }
             break;
     }
-
-    next();
 }
 
 module.exports = {

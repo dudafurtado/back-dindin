@@ -50,7 +50,8 @@ const fieldsToTransactions = ({ descricao, valor, data, categoria_id, tipo}) => 
     return { ok: true }
 }
 
-const fieldsToUser = ({nome , email, senha}) => {
+const fieldsToUser = ({ nome , email, senha }) => {
+    
     if (!nome) {
         const response = {
             message: errors.nameX,
@@ -98,8 +99,21 @@ const fieldsToLogin = ({email, senha}) => {
     return { ok: true }
 }
 
+const fieldToToken = ({ token }) => {
+    if (!token) {
+        const response = {
+            message: errors.accountX,
+            ok: false
+        }
+        return response;
+    }
+
+    return { ok: true }
+}
+
 module.exports = { 
     fieldsToTransactions,
     fieldsToUser,
-    fieldsToLogin
+    fieldsToLogin,
+    fieldToToken
  }

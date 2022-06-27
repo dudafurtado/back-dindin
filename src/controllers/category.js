@@ -1,11 +1,11 @@
-const conexao = require('../database/conexao');
+const categoryModel = require('../models/categoryModel');
 
 const listingAllTheCategories = async (req, res) => {
     try {
-        const { rows } = await conexao.query('select * from categorias');
-        return res.status(200).json(rows);
+        const categories = await categoryModel.allCategories();
+        return res.status(200).json(categories);
     } catch (error) {
-        return res.status(400).json(error.message);
+        return res.status(500).json(error.message);
     }
 };
 
