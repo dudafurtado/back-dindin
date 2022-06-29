@@ -18,7 +18,7 @@ const bankStatement = async (req, res) => {
 const listingTransactions = async (req, res) => {
     const jwtID = tokenToGetID({ req });
     try {
-        const transactions = await transactionModel.listTransactionsByUserID({ jwtID });
+        const transactions = await transactionModel.transactionsByUserID({ jwtID });
         return res.status(200).json(transactions);
     } catch (error) {
         return res.status(500).json(error.message);
@@ -60,7 +60,7 @@ const addNewTransaction = async (req, res) => {
             return res.status(400).json(errors.catNonexistent);
         }
 
-        const { rowCount, rows } = await transactionModel.addTransaction({ 
+        await transactionModel.addTransaction({ 
             descricao, 
             valor, 
             data, 
@@ -68,13 +68,10 @@ const addNewTransaction = async (req, res) => {
             jwtID, 
             tipo 
         });
-        if (rowCount === 0) {
-            return res.status(500).json(errors.transNotPossible);
-        }
 
-        return res.status(200).json(rows[0]);
+        return res.status(200).json("Transação adicionada com sucesso");
     } catch (error) {
-        return res.status(500).json(error);
+        return res.status(500).json(error.message);
     }
 };
 
@@ -105,7 +102,7 @@ const updateTransaction = async (req, res) => {
             return res.status(400).json(errors.catNonexistent);
         }
 
-        const { rowCount, rows } = await transactionModel.updateTransaction({ 
+        await transactionModel.updateTransaction({ 
             descricao, 
             valor, 
             data, 
@@ -114,11 +111,8 @@ const updateTransaction = async (req, res) => {
             tipo, 
             paramsID 
         });
-        if (rowCount === 0) {
-            return res.status(500).json(errors.transNotPossible);
-        }
 
-        return res.status(200).json(rows[0]);
+        return res.status(200).json("Transação atualizada com sucesso");
     } catch (error) {
         return res.status(500).json(error.message);
     }
@@ -129,10 +123,7 @@ const deleteTransaction = async (req, res) => {
     const { id: paramsID } = req.params;
 
     try {
-        const deletedTransaction = await transactionModel.deleteTransaction({ paramsID, jwtID });
-        if(deletedTransaction === 0) {
-            return res.status(500).json(errors.transNonexistent);
-        }
+        await transactionModel.deleteTransaction({ paramsID, jwtID });
 
         return res.status(200).json(errors.transSuccess);
     } catch (error) {

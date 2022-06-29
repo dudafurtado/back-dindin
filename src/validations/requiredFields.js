@@ -39,7 +39,7 @@ const fieldsToTransactions = ({ descricao, valor, data, categoria_id, tipo}) => 
             ok: false
         }
         return response;
-    } else if (tipo !== 'entrada' && tipo !== 'saída') {
+    } else if (tipo !== 'entrada' && tipo !== 'saida') {
         const response = {
             message: errors.wrongType,
             ok: false

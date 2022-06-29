@@ -1,12 +1,18 @@
-const jsonwebtoken = require('jsonwebtoken');
-const jwtSecret = require('../../env/jwt_secret');
+const { tokenExists } = require('../models/tokenModel');
 
-const conexao = require('../database/connection');
+const { tokenToGetID } = require('../validations/token');
 const { fieldToToken } = require('../validations/requiredFields');
+
 const { errors } = require('../messages/error');
 
 const authorizationToken = async (req, res, next) => {
-    const token = req.header('Authorization').replace('Bearer', "").trim();
+    const authorization = req.header('Authorization');
+    
+    if(!authorization) {
+        return res.status(400).json(errors.accountX);
+    }
+
+    const token = authorization.replace('Bearer', "").trim();
 
     const validations = fieldToToken({ token });
     if (!validations.ok) {
@@ -14,14 +20,14 @@ const authorizationToken = async (req, res, next) => {
     }
     
     try {
-        const { id: jwtID } = jsonwebtoken.verify(token, jwtSecret);
+        const jwtID = tokenToGetID({ req });
 
-        const { rowCount } = await conexao.query('select id from usuarios where id = $1', [jwtID]);
-        if (rowCount === 0) {
+        const validToken = await tokenExists({ jwtID });
+        if (validToken === 0) {
             return res.status(400).json(errors.tokenX);
         }
 
-        next()
+        next();
     } catch (error) {
         return res.status(400).json(error.message);
     }

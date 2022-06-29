@@ -13,7 +13,7 @@ const userAdded = async ({ nome, email, hash }) => {
 }
 
 const getUser = async ({ email }) => {
-    const gettingUser = 'select id, nome, email from usuarios where email = $1'
+    const gettingUser = 'select * from usuarios where email = $1'
     const { rows } = await conexao.query(gettingUser, [ email]);
 
     return rows[0];

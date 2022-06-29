@@ -24,20 +24,17 @@ const transactionByID = async ({ paramsID, jwtID }) => {
 }
 
 const addTransaction = async ({ descricao, valor, data, categoria_id, jwtID, tipo }) => {
-    const query = 'insert into transacoes (descricao, valor, data, categoria_id, usuario_id, tipo) values ($1, $2, $3, $4, $5, $6)'
-    const { rowCount, rows } = await conexao.query(query, [descricao, valor, data, categoria_id, jwtID, tipo]);
-    return { rowCount, rows };
+    const query = 'insert into transacoes (descricao, valor, data, categoria_id, usuario_id, tipo) values ($1, $2, $3, $4, $5, $6)';
+    await conexao.query(query, [descricao, valor, data, categoria_id, jwtID, tipo]);
 } 
 
 const updateTransaction = async ({ descricao, valor, data, categoria_id, jwtID, tipo, paramsID }) => {
     const query = 'update transacoes set descricao = $1, valor = $2, data = $3, categoria_id = $4, usuario_id = $5, tipo = $6 where id = $7';
-    const { rowCount, rows } = await conexao.query(query, [descricao, valor, data, categoria_id, jwtID, tipo, paramsID]);
-    return { rowCount, rows };   
+    await conexao.query(query, [descricao, valor, data, categoria_id, jwtID, tipo, paramsID]); 
 }
 
 const deleteTransaction = async ({ paramsID, jwtID }) => {
-    const { rowCount } = await conexao.query('delete from transacoes where id = $1 and usuario_id = $2', [paramsID, jwtID]);
-    return rowCount;
+    await conexao.query('delete from transacoes where id = $1 and usuario_id = $2', [paramsID, jwtID]);
 }
 
 module.exports = {

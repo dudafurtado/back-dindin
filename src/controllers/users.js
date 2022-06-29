@@ -1,10 +1,7 @@
-const jwt = require('jsonwebtoken');
 const securePassword = require('secure-password');
 const pwd = securePassword();
 
-const { passwordCrypted, validatingPassword } = require('../validations/password');
-const jwtSecret = require('../../env/jwt_secret');
-
+const { passwordCrypted } = require('../validations/password');
 const { fieldsToUser, fieldsToLogin } = require('../validations/requiredFields');
 const { creatingToken, tokenToGetID, tokenToGetEmail } = require('../validations/token');
 const userModel = require('../models/usersModel');
@@ -42,7 +39,7 @@ const userFirstAccess = async (req, res) => {
 
 const userLogIn = async (req, res) => {
     const { email, senha } = req.body;
-    console.log(req.body);
+    
     const validations = fieldsToLogin({ email, senha });
     if (!validations.ok) {
         return res.status(400).json(validations.message);
@@ -56,13 +53,20 @@ const userLogIn = async (req, res) => {
         
         const userData = await userModel.getUser({ email });
 
-        const password = await validatingPassword({ 
-            passwordReq: senha, 
-            userPasswordDB: userData.senha, 
-            email 
-        });
-        if (!password.ok) {
-            return res.status(400).json(password.message);
+        const result = await pwd.verify(Buffer.from(senha), Buffer.from(userData.senha, "hex"));
+        switch (result) {
+            case securePassword.INVALID_UNRECOGNIZED_HASH:
+            case securePassword.INVALID:
+                return res.status(400).json(errors.loginIncorrect);
+            case securePassword.VALID:
+                break;
+            case securePassword.VALID_NEEDS_REHASH:
+                try {
+                    const hash = await passwordCrypted({ senha });
+                    await userModel.userPasswordUpdated({ hash, email });
+                } catch (error) {
+                }
+                break;
         }
 
         const token = creatingToken({ user: userData });
@@ -103,6 +107,7 @@ const userUpdate = async (req, res) => {
     const jwtEmail = tokenToGetEmail({ req })
     
     const { nome, email, senha } = req.body;
+
     const validations = fieldsToUser({ nome, email, senha });
     if (!validations.ok) {
         return res.status(400).json(validations.message);
@@ -112,7 +117,7 @@ const userUpdate = async (req, res) => {
         if (email !== jwtEmail) {
             const { rowCount } = await userModel.userByEmail({ email });
 
-            if (rowCount === 0) {
+            if (rowCount > 0) {
             return res.status(404).json(errors.userExists);
             }
         }
@@ -121,7 +126,7 @@ const userUpdate = async (req, res) => {
 
         const userUpdate = await userModel.userUpdated({ nome, email, hash, jwtID })
             if (userUpdate === 0) {
-            return res.status(400).json(errors.couldNotUpdateUser);
+            return res.status(500).json(errors.couldNotUpdateUser);
         }
 
         return res.status(200).json('Usúario atualizado com sucesso');

@@ -1,3 +1,3 @@
 const app = require('./server/server');
 
-app.listen(5432 || 8000);
+app.listen(8000);
