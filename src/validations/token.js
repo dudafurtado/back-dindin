@@ -1,5 +1,5 @@
 const jsonwebtoken = require('jsonwebtoken');
-const jwtSecret = require('../../env/jwt_secret');
+const jwtSecret = process.env.TOKEN_SECRET;
 
 const { fieldToToken } = require('./requiredFields');
 
