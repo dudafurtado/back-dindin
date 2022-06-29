@@ -1,6 +1,7 @@
 const errors = {
     userExists: 'Já existe um usuário cadastrado com o e-mail informado.',
     couldNotSignin: 'Não foi possivel cadastrar o usuário.',
+    couldNotUpdateUser: 'Não foi possivel atualizar o usuário.',
     loginIncorrect: 'Email ou senha incorretos.',
     userNotFound: 'Usuário não encontrado.',
     nameX: 'O Campo nome é obrigatorio.',
