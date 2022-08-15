@@ -6,7 +6,7 @@ const users = require('../controllers/users');
 const category = require('../controllers/category');
 const transactions = require('../controllers/transactions');
 
-const routes = express()
+const routes = express();
 
 routes.post('/user', users.userFirstAccess);
 routes.post('/login', users.userLogIn);
