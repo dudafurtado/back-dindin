@@ -5,10 +5,7 @@ const pool = new Pool({
   host: process.env.DB_HOST,
   database: process.env.DB,
   password: process.env.DB_PASSWORD,
-  port: process.env.PORT,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  port: process.env.PORT
 });
 
 const query = (text, params) => {
