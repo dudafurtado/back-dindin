@@ -3,13 +3,13 @@ const { tokenExists } = require('../models/tokenModel');
 const { tokenToGetID } = require('../validations/token');
 const { fieldToToken } = require('../validations/requiredFields');
 
-const { errors } = require('../messages/error');
+const message = require('../messages/messages');
 
 const authorizationToken = async (req, res, next) => {
     const authorization = req.header('Authorization');
     
     if(!authorization) {
-        return res.status(400).json(errors.accountX);
+        return res.status(400).json(message.accountX);
     }
 
     const token = authorization.replace('Bearer', "").trim();
@@ -24,7 +24,7 @@ const authorizationToken = async (req, res, next) => {
 
         const validToken = await tokenExists({ jwtID });
         if (validToken === 0) {
-            return res.status(400).json(errors.tokenX);
+            return res.status(400).json(message.tokenX);
         }
 
         next();

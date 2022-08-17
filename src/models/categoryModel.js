@@ -1,12 +1,12 @@
-const conexao = require('../database/connection');
+const connection = require('../database/connection');
 
 const allCategories = async () => {
-    const { rows } = await conexao.query('select * from categorias');
+    const { rows } = await connection('select * from categories');
     return rows;
 }
 
 const categoryExists = async ({ categoria_id }) => {
-    const { rowCount } = await conexao.query('select * from categorias where id = $1', [categoria_id]);
+    const { rowCount } = await connection('select * from categories where id = $1', [categoria_id]);
     return rowCount;
 }
 

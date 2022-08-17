@@ -1,47 +1,47 @@
-const { errors } = require('../messages/error')
+const message = require('../messages/messages')
 
-const fieldsToTransactions = ({ descricao, valor, data, categoria_id, tipo}) => {
-    if (!descricao) {
+const fieldsToTransactions = ({ description, value, date, category_id, type }) => {
+    if (!description) {
         const response = {
-            message: errors.descriptionX,
+            message: message.descriptionX,
             ok: false
         }
         return response;
     }
 
-    if (!valor) {
+    if (!value) {
         const response = {
-            message: errors.priceX,
+            message: message.priceX,
             ok: false
         }
         return response;
     }
 
-    if (!data) {
+    if (!date) {
         const response = {
-            message: errors.dateX,
+            message: message.dateX,
             ok: false
         }
         return response;
     }
 
-    if (!categoria_id) {
+    if (!category_id) {
         const response = {
-            message: errors.categoryIDX,
+            message: message.categoryIDX,
             ok: false
         }
         return response;
     }
 
-    if (!tipo) {
+    if (!type) {
         const response = {
-            message: errors.typeX,
+            message: message.typeX,
             ok: false
         }
         return response;
-    } else if (tipo !== 'entrada' && tipo !== 'saida') {
+    } else if (type.toLowerCase() !== 'entrada' && type.toLowerCase() !== 'saida') {
         const response = {
-            message: errors.wrongType,
+            message: message.wrongType,
             ok: false
         }
         return response;
@@ -50,11 +50,11 @@ const fieldsToTransactions = ({ descricao, valor, data, categoria_id, tipo}) => 
     return { ok: true }
 }
 
-const fieldsToUser = ({ nome , email, senha }) => {
+const fieldsToUser = ({ name, email, password }) => {
     
-    if (!nome) {
+    if (!name) {
         const response = {
-            message: errors.nameX,
+            message: message.nameX,
             ok: false
         }
         return response;
@@ -62,15 +62,15 @@ const fieldsToUser = ({ nome , email, senha }) => {
 
     if (!email) {
         const response = {
-            message: errors.emailX,
+            message: message.emailX,
             ok: false
         }
         return response;
     }
 
-    if (!senha) {
+    if (!password) {
         const response = {
-            message: errors.passwordX,
+            message: message.passwordX,
             ok: false
         }
         return response;
@@ -79,18 +79,18 @@ const fieldsToUser = ({ nome , email, senha }) => {
     return { ok: true }
 }
 
-const fieldsToLogin = ({email, senha}) => {
+const fieldsToLogin = ({ email, password }) => {
     if (!email) {
         const response = {
-            message: errors.emailX,
+            message: message.emailX,
             ok: false
         }
         return response;
     }
 
-    if (!senha) {
+    if (!password) {
         const response = {
-            message: errors.passwordX,
+            message: message.passwordX,
             ok: false
         }
         return response;
@@ -102,7 +102,7 @@ const fieldsToLogin = ({email, senha}) => {
 const fieldToToken = ({ token }) => {
     if (!token) {
         const response = {
-            message: errors.accountX,
+            message: message.accountX,
             ok: false
         }
         return response;

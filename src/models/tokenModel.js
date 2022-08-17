@@ -1,7 +1,7 @@
-const conexao = require('../database/connection');
+const connection = require('../database/connection');
 
 const tokenExists = async ({ jwtID }) => {
-    const { rowCount } = await conexao.query('select id from usuarios where id = $1', [jwtID]);
+    const { rowCount } = await connection('select id from users where id = $1', [jwtID]);
     return rowCount;
 }
 

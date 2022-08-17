@@ -4,7 +4,7 @@ const { tokenToGetID } = require('../validations/token');
 const transactionModel = require('../models/transactionsModel');
 const categoryModel = require('../models/categoryModel');
 
-const { errors } = require('../messages/error');
+const message = require('../messages/messages');
 
 const bankStatement = async (req, res) => {
     try {
@@ -31,7 +31,7 @@ const getTransactionById = async (req, res) => {
     try {
         const { rowCount, rows } = await transactionModel.transactionByID({ paramsID, jwtID });
         if(rowCount === 0) {
-            return res.status(400).json(errors.transNonexistent);
+            return res.status(400).json(message.transNonexistent);
         }
         return res.status(200).json(rows);
     } catch (error) {
@@ -41,35 +41,34 @@ const getTransactionById = async (req, res) => {
 
 const addNewTransaction = async (req, res) => {
     const jwtID = tokenToGetID({ req });
+    const { description, value, date, category_id, type } = req.body;
 
-    const { descricao, valor, data, categoria_id, tipo } = req.body;
     const validations = fieldsToTransactions({ 
-        descricao, 
-        valor, 
-        data, 
-        categoria_id, 
-        tipo
+        description, 
+        value, 
+        date, 
+        category_id, 
+        type
     });
     if (!validations.ok) {
         return res.status(400).json(validations.message)
     }
 
     try {
-        const categoryExists = await categoryModel.categoryExists({ categoria_id });
+        const categoryExists = await categoryModel.categoryExists({ category_id });
         if (categoryExists === 0) {
-            return res.status(400).json(errors.catNonexistent);
+            return res.status(400).json(message.catNonexistent);
         }
 
         await transactionModel.addTransaction({ 
-            descricao, 
-            valor, 
-            data, 
-            categoria_id, 
-            jwtID, 
-            tipo 
+            description, 
+            value, 
+            date, 
+            category_id, 
+            type
         });
 
-        return res.status(200).json("Transação adicionada com sucesso");
+        return res.status(200).json(message.transAdded);
     } catch (error) {
         return res.status(500).json(error.message);
     }
@@ -79,13 +78,13 @@ const updateTransaction = async (req, res) => {
     const jwtID = tokenToGetID({ req });
     const { id: paramsID } = req.params;
 
-    const { descricao, valor, data, categoria_id, tipo } = req.body;
+    const { description, value, date, category_id, type } = req.body;
     const validations = fieldsToTransactions({ 
-        descricao, 
-        valor, 
-        data, 
-        categoria_id, 
-        tipo 
+        description, 
+        value, 
+        date, 
+        category_id, 
+        type
     });
     if (!validations.ok) {
         return res.status(400).json(validations.message)
@@ -94,25 +93,24 @@ const updateTransaction = async (req, res) => {
     try {
         const transactionExists = await transactionModel.transactionByID({ paramsID, jwtID });
         if(transactionExists === 0) {
-            return res.status(400).json(errors.transNonexistent);
+            return res.status(400).json(message.transNonexistent);
         }
 
-        const categoryExists = await categoryModel.categoryExists({ categoria_id });
+        const categoryExists = await categoryModel.categoryExists({ category_id });
         if (categoryExists === 0) {
-            return res.status(400).json(errors.catNonexistent);
+            return res.status(400).json(message.catNonexistent);
         }
 
         await transactionModel.updateTransaction({ 
-            descricao, 
-            valor, 
-            data, 
-            categoria_id, 
-            jwtID, 
-            tipo, 
+            description, 
+            value, 
+            date, 
+            category_id, 
+            type,
             paramsID 
         });
 
-        return res.status(200).json("Transação atualizada com sucesso");
+        return res.status(200).json(message.transUpdated);
     } catch (error) {
         return res.status(500).json(error.message);
     }
@@ -125,7 +123,7 @@ const deleteTransaction = async (req, res) => {
     try {
         await transactionModel.deleteTransaction({ paramsID, jwtID });
 
-        return res.status(200).json(errors.transSuccess);
+        return res.status(200).json(message.transDeleted);
     } catch (error) {
         return res.status(500).json(error.message);
     }

@@ -1,11 +1,11 @@
-const conexao = require('../database/connection');
+const connection = require('../database/connection');
 
 const accountStatement = async () => {
-    const { rows: typeEntrance } = await conexao.query('select sum(valor) from transacoes where tipo = $1', 
+    const { rows: typeEntrance } = await connection('select sum(value) from transactions where type = $1', 
     ['entrada']);
     const sumEntrance = typeEntrance[0].sum;
 
-    const { rows: typeExit } = await conexao.query('select sum(valor) from transacoes where tipo = $1', 
+    const { rows: typeExit } = await connection('select sum(value) from transactions where type = $1', 
     ['saida']);
     const sumExit = typeExit[0].sum;
 
@@ -13,28 +13,28 @@ const accountStatement = async () => {
 }
 
 const transactionsByUserID = async ({ jwtID }) => {
-    const { rows } = await conexao.query('select * from transacoes where usuario_id = $1', [jwtID]);
+    const { rows } = await connection('select * from transactions where user_id = $1', [jwtID]);
     return rows;
 }
 
 const transactionByID = async ({ paramsID, jwtID }) => {
-    const { rowCount, rows } = await conexao.query('select * from transacoes where id = $1 and usuario_id = $2', 
+    const { rowCount, rows } = await connection('select * from transactions where id = $1 and user_id = $2', 
     [paramsID, jwtID]);
     return { rowCount, rows };
 }
 
-const addTransaction = async ({ descricao, valor, data, categoria_id, jwtID, tipo }) => {
-    const query = 'insert into transacoes (descricao, valor, data, categoria_id, usuario_id, tipo) values ($1, $2, $3, $4, $5, $6)';
-    await conexao.query(query, [descricao, valor, data, categoria_id, jwtID, tipo]);
+const addTransaction = async ({ description, value, date, category_id, jwtID, type }) => {
+    const query = 'insert into transactions (description, value, date, category_id, jwtID, type) values ($1, $2, $3, $4, $5, $6)';
+    await connection(query, [description, value, date, category_id, jwtID, type]);
 } 
-
-const updateTransaction = async ({ descricao, valor, data, categoria_id, jwtID, tipo, paramsID }) => {
-    const query = 'update transacoes set descricao = $1, valor = $2, data = $3, categoria_id = $4, usuario_id = $5, tipo = $6 where id = $7';
-    await conexao.query(query, [descricao, valor, data, categoria_id, jwtID, tipo, paramsID]); 
+description, value, date, category_id, jwtID, type, paramsID
+const updateTransaction = async ({ description, value, date, category_id, jwtID, type, paramsID }) => {
+    const query = 'update transactions set description = $1, value = $2, date = $3, category_id = $4, user_id = $5, type = $6 where id = $7';
+    await connection(query, [description, value, date, category_id, jwtID, type, paramsID]); 
 }
 
 const deleteTransaction = async ({ paramsID, jwtID }) => {
-    await conexao.query('delete from transacoes where id = $1 and usuario_id = $2', [paramsID, jwtID]);
+    await connection('delete from transactions where id = $1 and user_id = $2', [paramsID, jwtID]);
 }
 
 module.exports = {

@@ -1,4 +1,4 @@
-const errors = {
+const message = {
     userExists: 'Já existe um usuário cadastrado com o e-mail informado.',
     couldNotSignin: 'Não foi possivel cadastrar o usuário.',
     couldNotUpdateUser: 'Não foi possivel atualizar o usuário.',
@@ -10,7 +10,7 @@ const errors = {
     transNonexistent: 'Não foi possível encontrar transação',
     catNonexistent: 'A categoria indicada não existe',
     transNotPossible: 'Não foi possível adicionar essa transação',
-    transSuccess: 'Transação deletada com sucesso',
+    transDeleted: 'Transação deletada com sucesso',
     descriptionX: 'É necessário descrever a transação.',
     priceX: 'É necessário definir o valor da transação.',
     dateX: 'É necessário indicar a data transação.',
@@ -18,7 +18,9 @@ const errors = {
     typeX: 'É necessário informar qual o tipo da transação.',
     wrongType: 'O tipo indicado não existe.',
     accountX: 'É preciso ter uma conta para ver as transações',
-    tokenX: 'Para acessar este recurso um token de autenticação válido deve ser enviado.'
+    tokenX: 'Para acessar este recurso um token de autenticação válido deve ser enviado.',
+    transAdded: 'Transação adicionada com sucesso',
+    transUpdated: 'Transação atualizada com sucesso'
 }
 
-module.exports = { errors }
+module.exports = message;
