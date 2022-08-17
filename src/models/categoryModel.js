@@ -5,8 +5,8 @@ const allCategories = async () => {
     return rows;
 }
 
-const categoryExists = async ({ categoria_id }) => {
-    const { rowCount } = await connection('select * from categories where id = $1', [categoria_id]);
+const categoryExists = async ({ category_id }) => {
+    const { rowCount } = await connection('select * from categories where id = $1', [category_id]);
     return rowCount;
 }
 

@@ -29,8 +29,8 @@ const getTransactionById = async (req, res) => {
     const jwtID = tokenToGetID({ req });
     const { id: paramsID } = req.params;
     try {
-        const { rowCount, rows } = await transactionModel.transactionByID({ paramsID, jwtID });
-        if(rowCount === 0) {
+        const transactionExists = await transactionModel.transactionByID({ paramsID, jwtID });
+        if(transactionExists === 0) {
             return res.status(400).json(message.transNonexistent);
         }
         return res.status(200).json(rows);
@@ -64,7 +64,8 @@ const addNewTransaction = async (req, res) => {
             description, 
             value, 
             date, 
-            category_id, 
+            category_id,
+            jwtID,
             type
         });
 
@@ -105,7 +106,8 @@ const updateTransaction = async (req, res) => {
             description, 
             value, 
             date, 
-            category_id, 
+            category_id,
+            jwtID,
             type,
             paramsID 
         });

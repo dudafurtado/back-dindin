@@ -18,16 +18,16 @@ const transactionsByUserID = async ({ jwtID }) => {
 }
 
 const transactionByID = async ({ paramsID, jwtID }) => {
-    const { rowCount, rows } = await connection('select * from transactions where id = $1 and user_id = $2', 
+    const { rowCount } = await connection('select * from transactions where id = $1 and user_id = $2', 
     [paramsID, jwtID]);
-    return { rowCount, rows };
+    return rowCount;
 }
 
 const addTransaction = async ({ description, value, date, category_id, jwtID, type }) => {
-    const query = 'insert into transactions (description, value, date, category_id, jwtID, type) values ($1, $2, $3, $4, $5, $6)';
+    const query = 'insert into transactions (description, value, date, category_id, user_id, type) values ($1, $2, $3, $4, $5, $6)';
     await connection(query, [description, value, date, category_id, jwtID, type]);
 } 
-description, value, date, category_id, jwtID, type, paramsID
+
 const updateTransaction = async ({ description, value, date, category_id, jwtID, type, paramsID }) => {
     const query = 'update transactions set description = $1, value = $2, date = $3, category_id = $4, user_id = $5, type = $6 where id = $7';
     await connection(query, [description, value, date, category_id, jwtID, type, paramsID]); 

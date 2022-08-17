@@ -1,8 +1,8 @@
 const securePassword = require('secure-password');
-const password = securePassword();
+const pwd = securePassword();
 
-const passwordCrypted = async ({ senha }) => {
-    const hash = (await password.hash(Buffer.from(senha))).toString("hex");
+const passwordCrypted = async ({ password }) => {
+    const hash = (await pwd.hash(Buffer.from(password))).toString("hex");
     return hash;
 }
 
