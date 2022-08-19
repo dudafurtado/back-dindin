@@ -9,7 +9,7 @@ const message = require('../messages/messages');
 const bankStatement = async (req, res) => {
     try {
         const { sumEntrance, sumExit } = await transactionModel.accountStatement();
-        return res.status(200).json({ entrada: sumEntrance, saida: sumExit });
+        return res.status(200).json({ entrance: sumEntrance, exit: sumExit });
     } catch (error) {
         return res.status(500).json(error.message);
     }

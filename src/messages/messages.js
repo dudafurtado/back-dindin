@@ -8,7 +8,7 @@ const message = {
     loginIncorrect: 'Email ou senha incorretos.',
     nameX: 'O Campo nome é obrigatorio.',
     emailX: 'O Campo email é obrigatório.',
-    passwordX: 'O Campo senha é obrigatorio.',
+    passwordX: 'O Campo senha é obrigatorio e precisa de + de 8 caracteres.',
     accountX: 'É preciso ter uma conta para ver as transações',
     tokenX: 'Para acessar este recurso um token de autenticação válido deve ser enviado.',
     descriptionX: 'É necessário descrever a transação.',

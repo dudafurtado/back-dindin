@@ -26,7 +26,7 @@ const userFirstAccess = async (req, res) => {
 
         const userCreated = await userModel.userAdded({ name, email, hash })
         if (userCreated === 0) {
-            return res.status(500).json(messages.couldNotSignin);
+            return res.status(400).json(messages.couldNotSignin);
         }
 
         return res.status(200).json(messages.userCreated);
@@ -55,7 +55,7 @@ const userLogIn = async (req, res) => {
         switch (result) {
             case securePassword.INVALID_UNRECOGNIZED_HASH:
             case securePassword.INVALID:
-                return res.status(400).json(errors.loginIncorrect);
+                return res.status(400).json(messages.loginIncorrect);
             case securePassword.VALID:
                 break;
             case securePassword.VALID_NEEDS_REHASH:
@@ -70,7 +70,7 @@ const userLogIn = async (req, res) => {
         const token = creatingToken({ user: userData });
 
         return res.send({
-            usuarios: {
+            user: {
                 id: userData.id,
                 name: userData.name,
                 email: userData.email

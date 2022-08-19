@@ -11,7 +11,7 @@ const routes = express();
 routes.post('/user', users.userFirstAccess);
 routes.post('/login', users.userLogIn);
 
-routes.use(authorizationToken)
+routes.use(authorizationToken);
 
 routes.get('/user', users.informationToTheUserHimself);
 routes.put('/user', users.userUpdate);
